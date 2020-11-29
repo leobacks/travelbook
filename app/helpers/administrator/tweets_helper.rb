@@ -1,0 +1,2 @@
+module Administrator::TweetsHelper
+end
