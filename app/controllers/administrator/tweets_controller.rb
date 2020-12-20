@@ -3,7 +3,6 @@ class Administrator::TweetsController < ApplicationController
  
   def index
     @tweet = Tweet.new
-    @tweets = params[:tag_id].present? ? Tag.find(params[:tag_id]).tweets : Tweet.all
   end
 
   private

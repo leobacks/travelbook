@@ -2,9 +2,16 @@ class TweetsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @tweets = Tweet.all
+    @rank_tweets = Tweet.all.sort {|a,b| b.liked_users.count <=> a.liked_users.count}.first(5)
+    if params[:search] == nil
+      @tweets= Tweet.all.page(params[:page]).per(10)
+    elsif params[:search] == ''
+      @tweets= Tweet.all.page(params[:page]).per(10)
+    else
+      @tweets = Tweet.where("backpacker LIKE ? ",'%' + params[:search] + '%').or(Tweet.where("price LIKE ? ", "%" + params[:search] + "%")).page(params[:page]).per(10)
+    end
   end
-
+  
   def create
     tweet = Tweet.new(tweet_params)
     tweet.user_id = current_user.id
@@ -42,7 +49,7 @@ class TweetsController < ApplicationController
 
   private
   def tweet_params
-    params.require(:tweet).permit(:body, :country, tag_ids: [])
+    params.require(:tweet).permit(:body, :lat, :country, :image, :q, :lng, :backpacker,:price, tag_ids: [], price_ids: [])
   end
 
 end

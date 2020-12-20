@@ -56,3 +56,26 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'devise'
 
 gem 'country_select'
+
+gem 'carrierwave'
+gem 'cloudinary'
+
+gem 'dotenv-rails'
+
+gem 'ransack'
+
+gem 'omniauth-facebook'
+
+gem 'omniauth-twitter'
+
+gem 'omniauth-google-oauth2'
+
+gem 'kaminari'
+
+group :production do
+  gem 'mysql2', '>= 0.4.4'
+end
+
+group :production, :staging do
+  gem 'unicorn'
+end

@@ -13,3 +13,106 @@
  *= require_tree .
  *= require_self
  */
+ 
+ * {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: YuGothic,'Yu Gothic', メイリオ, Meiryo, "ＭＳ Ｐゴシック", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: #fff;
+}
+
+header {
+  padding: 20px 4% 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+h1 {
+  margin: 0; padding: 0;
+  font-size: 20px;
+}
+
+a {	
+  text-decoration: none;
+  color: #4b4b4b;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  display: flex;
+}
+
+li {
+  margin: 0 0 0 15px;
+  font-size: 14px;
+}
+
+li a:hover {
+	background-color: #e0dedebe;
+}
+
+nav {
+  margin: 0 0 0 auto;
+}
+
+.main-visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 555px;
+  background-image: url(/wikiwikimap.png) ;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.main-visual {
+  animation: main-visual 2s cubic-bezier(.4, 0, .2, 1);
+
+}
+
+@keyframes main-visual {
+  0% {
+    clip-path: circle(0 at 50% 50%);
+    -webkit-clip-path: circle(0 at 50% 50%);
+  }
+  
+  100% {
+    clip-path: circle(100% at 50% 50%);
+    -webkit-clip-path: circle(100% at 50% 50%);
+  }
+}
+
+h2 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: normal;
+  color: #4b4b4b;
+}
+
+main {
+  box-shadow: 10px 10px 10px 10px rgba(104, 103, 103, 0.6);
+}
+
+.sign-btn {
+  width: 300px;
+  height: 50px;
+  border: solid 1px;
+}
+
+footer {
+  background-color: #fff;
+  padding: 10px;
+  width: 100%;
+}
+
+
+

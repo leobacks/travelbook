@@ -1,32 +1,61 @@
-<h1>GeekTwitter</h1>
-<%= button_to 'ログアウト', destroy_user_session_path, method: :delete %>
-<h3>Tweet一覧</h3>
 
-<% if user_signed_in? %>
-<%= link_to "マイページへ", user_path(current_user.id) %>　
-<% end %>
+<div class="search">
+ <h3>投稿を検索</h3>
+ <%= form_tag({controller:"tweets",action:"index"}, method: :get) do %>
+  <label><%= check_box_tag :search, "一人旅" %> 一人旅</label>
+  <label><%= check_box_tag :search, "友達旅" %> 友達旅</label>
+  <label><%= check_box_tag :search, "カップル旅" %> カップル旅</label>
+  <label><%= check_box_tag :search, "夫婦旅" %> 夫婦旅</label>
+  <label><%= check_box_tag :search, "その他" %> その他</label>
 
- 
+  <br>
 
-<%= form_tag tweets_path, method: :get, class: 'boards__searchForm' do %>
-  <%= select_tag :tag_id,
-                 options_from_collection_for_select(Tag.all, :id, :name, params[:tag_id]),
-                 {
-                   prompt: 'タグで絞り込み検索',
-                   onchange: 'submit(this.form);'
-                 }
-  %>
-<% end %>
+  <label><%= check_box_tag :search, "~500円" %> ~500円</label>
+  <label><%= check_box_tag :search, "501円~600円" %> 501円~600円</label>
+  <label><%= check_box_tag :search, "601円~700円" %> 601円~700円</label>
+  <label><%= check_box_tag :search, "701円~800円" %> 701円~800円</label>
+  <label><%= check_box_tag :search, "801円~900円" %> 801円~900円</label>
+  <label><%= check_box_tag :search, "901円~1000円" %> 901円~1000円</label>
+  <label><%= check_box_tag :search, "1001円~1100円" %> 1001円~1100円</label>
+  <label><%= check_box_tag :search, "1101円~1200円" %> 1101円~1200円</label>
+  <label><%= check_box_tag :search, "1201円~1300円" %> 1201円~1300円</label>
+  <label><%= check_box_tag :search, "1301円~1400円" %> 1301円~1400円</label>
+  <label><%= check_box_tag :search, "1401円~1500円" %> 1401円~1500円</label>
+  <label><%= check_box_tag :search, "1501円~" %> 1501円~</label>
 
+  <br>
+
+   <a class='cp_btn'><%= submit_tag "検索する" , class: 'button' %></a>
+  <% end %>
+
+ </div>
+
+ <h2>新着一覧</h2>
 
 <div class="tweets-container">
+
+
   <% @tweets.each do |t| %>
     
-    <div class="tweet">
-      <%= t.body %>
-      <% t.tags.each do |tag| %>
-        <%= tag.name %>
-      <% end %>  
+  <div class="tweet">
+
+    <%= image_tag t.image_url, size: "200x300" if t.image? %>
+
+    <br>
+
+    <%= t.body %>
+
+    <br>
+
+    <%= t.backpacker %>
+
+    <br>
+
+    <%= t.price %>
+
+    <br>
+
+    <%= t.country %>
       
       <% if user_signed_in? %>
       <% if current_user.already_liked?(t) %>
@@ -38,12 +67,127 @@
             <i class="fas fa-bookmark"></i><%= t.likes.count %>
           <% end %>
       <% end %>
-  <% else %>
-  <i class="fas fa-bookmark"></i><%= t.likes.count %>
-  <% end %>
+      <% else %>
+     <i class="fas fa-bookmark"></i><%= t.likes.count %>
+      <% end %>
 
-      <%= t.created_at %>
+   <br>
+
       <%= link_to "詳細へ", tweet_path(t.id) %>
+
+   <br>
+
+   
+  </div>
+
+    <% end %>
+  </div>
+  
+</div>
+
+  <%= paginate @tweets %>
+
+  <h2>いいねランキング</h2>
+
+  <div class="container">
+  <div class="rank1"><h3>１位</h3></div>
+  <div class="rank2"><h3>２位</h3></div>
+  <div class="rank3"><h3>３位</h3></div>
+  <div class="rank4"><h3>４位</h3></div>
+  <div class="rank5"><h3>５位</h3></div>
+  </div>
+
+  <div class="ranked-tweets">
+  <% @rank_tweets.each do |t| %>
+    <div class="ranked-posts">
+    <%= image_tag t.image_url, size: "200x300" if t.image? %>
+    <%= t.body %>
+
+    <br>
+
+    <%= t.backpacker %>
+
+    <br>
+
+    <%= t.price %>
+
+    <br>
+
+    <%= t.country %>
+      
+      <% if user_signed_in? %>
+      <% if current_user.already_liked?(t) %>
+          <%= link_to tweet_like_path(id: t.id, tweet_id: t.id), method: :delete do %>
+            <i class="fas fa-bookmark"></i><%= t.likes.count %>
+          <% end %>
+      <% else %>
+          <%= link_to tweet_likes_path(id: t.id, tweet_id: t.id), method: :post do %>
+            <i class="fas fa-bookmark"></i><%= t.likes.count %>
+          <% end %>
+      <% end %>
+      <% else %>
+     <i class="fas fa-bookmark"></i><%= t.likes.count %>
+      <% end %>
+
+   <br>
+
+      <%= link_to "詳細へ", tweet_path(t.id) %>
+
+   <br>
     </div>
   <% end %>
-</div>
+  </div>
+  
+  
+
+
+
+  <h2>地図から探す</h2>
+  <div id='map', style ="filter:grayscale(55%);"></div>
+  
+  <script>
+    function initMap() {
+
+      let latlng = new google.maps.LatLng(38.60, 139.5);
+  
+      let styles = [
+           {
+            stylers: [
+             { "saturation": 0 },
+             { "lightness": 0 }
+            ]
+           }
+          ];
+
+      let map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 2.5,
+          styles: styles,
+          center: latlng
+      });
+      let transitLayer = new google.maps.TransitLayer();
+      transitLayer.setMap(map);
+
+      <% @tweets.each do |t|%>
+        ( function() { 
+
+          let markerLatLng = new google.maps.LatLng({lat: <%= t.lat %>, lng: <%= t.lng %>});
+          let marker = new google.maps.Marker({ 
+            position: markerLatLng, 
+            map: map 
+          });
+
+          let infowindow = new google.maps.InfoWindow({
+            position: markerLatLng,
+            content: "<a href='<%= tweet_url(t.id) %>' target='_blank'><%= t.body %></a>"
+          });
+          marker.addListener('click', function() {
+            infowindow.open(map, marker);
+          });
+
+       })();
+      <% end %>
+ 
+  }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=ENV['GOOGLE_API_KEY'] %>&callback=initMap" async defer></script>

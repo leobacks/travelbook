@@ -1,8 +1,19 @@
-<h1>GeekTwitter</h1>
-<h3>Tweet詳細</h3>
-<div class="tweet">
-  <p><%= @tweet.body %></p>
-  <p><%= @tweet.created_at %></p>
+<h2>詳細ページ</h2>
+<div class="details">
+ <div class="show">
+  <%= image_tag @tweet.image_url, size: "200x300" if @tweet.image? %>
+
+ <div class="booktitle">
+  <%= @tweet.body %>
+  </div>
+
+  <div class="backpacker">
+  <%= @tweet.backpacker %>
+  </div>
+
+  <div class="price">
+  <%= @tweet.price %>
+  </div>
 
   <% if user_signed_in? %>
       <% if current_user.already_liked?(@tweet) %>
@@ -18,13 +29,13 @@
   <i class="fas fa-bookmark"></i><%= @tweet.likes.count %>
   <% end %>
 
-</div>
+ </div>
 
-<div class="comment-wrapper">
+ <div class="comment-wrapper">
   <p>コメント一覧</p>
   <% @comments.each do |c| %>
     <div>
-      <%= c.user.email unless c.user.blank? %>
+      <%=  @tweet.user.name %>
       <br>
       <%= c.content %>
     </div>
@@ -39,10 +50,8 @@
       <% end %>
     <% end %>
   <% end %>
+ </div>
+
+ <%= link_to "Tweet一覧に戻る", tweets_path %>
+
 </div>
-
-<% @tweet.tags.each do |tag| %>
-  <%= tag.name %>
-<% end %>
-
-<%= link_to "Tweet一覧に戻る", tweets_path %>
